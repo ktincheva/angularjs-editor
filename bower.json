@@ -1,11 +1,12 @@
 {
-  "name": "angularjs_editor",
+  "name": "angularjs-editor",
   "authors": [
     "kameliya.tincheva <kameliya.tincheva@securax.org>"
   ],
   "description": "Angularjs content editable with smilies support",
   "main": "contenteditable.js",
   "dependencies": {
+  "angular": ">=1.5.0",
     "angular-smilies": "~1.3.0"
   },
   "keywords": [
