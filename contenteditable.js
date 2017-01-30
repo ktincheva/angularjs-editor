@@ -14,9 +14,8 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                             var html = element.html();
 
                             element.html('');
-                            console.log(html);
                             if (attrs.stripBr) {
-                                html = html.replace(/<br>$/, '')
+                                //html = html.replace(/<br>$/, '&nbsp;')
                             }
 
                             if (event && event.keyCode == 32) {
