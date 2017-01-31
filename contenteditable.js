@@ -10,21 +10,29 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                     link: function (scope, element, attrs, ngModel) {
                         if (!ngModel)
                             return; // do nothing if no ng-model
+                        /*
+                         *  // read from input and write data to the model 
+                         * @param {type} event
+                         * @param {type} callback
+                         * @returns {undefined}
+                         */
+                       
                         var read = function (event, callback) {
+                           
                             var html = element.html();
-
-                            element.html('');
                             if (attrs.stripBr) {
                                 html = html.replace(/<br>$/, '&nbsp;');
                             }
 
                             if (event && event.keyCode == 32) {
                                 html = $filter('smilies')(html);
+                                ngModel.$setViewValue(html);
+                                element.html(html)
+                                if (callback && (typeof callback) == 'function')
+                                    callback();
+                            } else {
+                                ngModel.$setViewValue(html);
                             }
-                            ngModel.$setViewValue(html);
-                            element.html(html)
-                            if (callback && (typeof callback) == 'function')
-                                callback();
                         }
 
                         var moveCaretToEndOnChange = function () {
@@ -41,7 +49,9 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                             sel.removeAllRanges()
                             sel.addRange(range)
                         }
-                        
+                        /*
+                         * Specify how UI should be updated
+                         */
                         ngModel.$render = function () {
                             var value = null;
                             if (attrs.focusOnChange) {
@@ -58,6 +68,7 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                         });
                         element.on('blur', function (event) {
                             scope.$evalAsync(read(event, null));
+
                         });
                         element.on('focus', function (event) {
                             moveCaretToEndOnChange();
