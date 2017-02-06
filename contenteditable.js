@@ -18,13 +18,13 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                          */
                        
                         var read = function (event, callback) {
-                           
                             var html = element.html();
+                            Utils.debug_log(html, "read imput");
                             if (attrs.stripBr) {
                                 html = html.replace(/<br>$/, '&nbsp;');
                             }
 
-                            if (event && event.keyCode == 32) {
+                            if (event && event.keyCode == 32 && html!=="") {
                                 html = $filter('smilies')(html);
                                 ngModel.$setViewValue(html);
                                 element.html(html)
@@ -53,8 +53,9 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                          * Specify how UI should be updated
                          */
                         ngModel.$render = function () {
+                            Utils.debug_log(ngModel.$viewValue, "Render element function");
                             var value = null;
-                            if (attrs.focusOnChange) {
+                            if (attrs.focusOnChange && ngModel.$viewValue!=='') {
                                 value = $filter('smilies')(ngModel.$viewValue + '&nbsp;')
                                 ngModel.$setViewValue(value)
                                 element.html($sce.getTrustedHtml(value || ''));
