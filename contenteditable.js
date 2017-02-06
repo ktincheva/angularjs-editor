@@ -19,12 +19,12 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                        
                         var read = function (event, callback) {
                             var html = element.html();
-                            Utils.debug_log(html, "read imput");
-                            if (attrs.stripBr) {
+                             Utils.debug_log(html, "Angilar egitor read function html bofore strip br");
+                            if (attrs.stripBr && html!=='') {
                                 html = html.replace(/<br>$/, '&nbsp;');
                             }
-
-                            if (event && event.keyCode == 32 && html!=="") {
+                            Utils.debug_log(html, "Angilar egitor read function html after strip br");
+                            if (event && event.keyCode == 32) {
                                 html = $filter('smilies')(html);
                                 ngModel.$setViewValue(html);
                                 element.html(html)
@@ -56,11 +56,11 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                             Utils.debug_log(ngModel.$viewValue, "Render element function");
                             var value = null;
                             if (attrs.focusOnChange && ngModel.$viewValue!=='') {
-                                value = $filter('smilies')(ngModel.$viewValue + '&nbsp;')
+                                value = $filter('smilies')(ngModel.$viewValue)+'&nbsp';
                                 ngModel.$setViewValue(value)
-                                element.html($sce.getTrustedHtml(value || ''));
+                                element.html(value);
                             } else {
-                                element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+                                element.html(ngModel.$viewValue);
                             }
                         };
 
