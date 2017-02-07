@@ -16,12 +16,12 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                          * @param {type} callback
                          * @returns {undefined}
                          */
-                       
+
                         var read = function (event, callback) {
                             var html = element.html();
-                             Utils.debug_log(html, "Angilar egitor read function html bofore strip br");
-                            if (attrs.stripBr && html!=='') {
-                                html = html.replace(/<br>$/, '&nbsp;');
+                            Utils.debug_log(html, "Angilar egitor read function html bofore strip br");
+                            if (attrs.stripBr && html === '<br>') {
+                                html = '';
                             }
                             Utils.debug_log(html, "Angilar egitor read function html after strip br");
                             if (event && event.keyCode == 32) {
@@ -55,12 +55,12 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                         ngModel.$render = function () {
                             Utils.debug_log(ngModel.$viewValue, "Render element function");
                             var value = null;
-                            if (attrs.focusOnChange && ngModel.$viewValue!=='') {
-                                value = $filter('smilies')(ngModel.$viewValue)+'&nbsp';
+                            if (attrs.focusOnChange && ngModel.$viewValue !== '') {
+                                value = $filter('smilies')(ngModel.$viewValue) + '&nbsp';
                                 ngModel.$setViewValue(value)
-                                element.html(value);
+                                element.html($sce.getTrustedHtml(value || ''));
                             } else {
-                                element.html(ngModel.$viewValue);
+                                element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
                             }
                         };
 
