@@ -1,4 +1,4 @@
-use strict'
+'use strict'
 /*
  * https://docs.angularjs.org/api/ng/type/ngModel.NgModelController
  */
@@ -28,23 +28,31 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                         var range, selection, start, end, selectedText, startNode, endNode;
 
                         var read = function (event, callback) {
-                            var html = element.html().trim();
+                            
+                            var html = element.html();
                             if (html != '') {
-
-                                if (attrs.stripBr && event && event.keyCode == 32) {
-                                    html = html.replace(/<br\s*\/?>/gi, '');
+                                if (attrs.stripBr=="true" && event && event.keyCode == 32) {
+                                    
+                                    html = html.replace(/<br\s*[\/]?>/gi, "&nbsp;");
                                 }
+                                if (event && event.keyCode == 32) {
+                                    // Hach smilies filter skip filterin OO
+                                    html = html.replace("ОО", "О^О");
                                 html = $filter('smilies')(html);
+                                    html = html.replace("О^О", "ОО");
+                                    
+                                }
                                 updateView(html);
                             }
                         }
                         var updateView = function (html) {
-                            console.log('Update view function html', html);
+                            
                             if (ngModel.$viewValue != html)
                             {
                                 ngModel.$setViewValue(html);
                                 element.html(html);
-                                if (element[0].lastChild.nodeName == 'I') element.html(element.html().trim()+"&nbsp;");
+                                if (element[0].lastChild.nodeName == 'I')
+                                    element.html(element.html() + "&nbsp;");
                                 moveCaretToEndOnChange()
                             }
                         }
@@ -76,12 +84,11 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                          */
                         ngModel.$render = function () {
                             var value = null;
-                            console.log("Render started ngModel", ngModel.$viewValue);
-
                             if (attrs.focusOnChange && ngModel.$viewValue !== '') {
                                 value = $filter('smilies')(ngModel.$viewValue);
                                 element.html(value);
-                                if (element[0].lastChild.nodeName == 'I') element.html(element.html().trim()+"&nbsp;");
+                                if (element[0].lastChild.nodeName == 'I')
+                                    element.html(element.html() + "&nbsp;");
                                 moveCaretToEndOnChange()
                             } else {
                                 if (ngModel.$viewValue != '' && element.html() != ngModel.$viewValue)
@@ -91,8 +98,6 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                         };
 
                         element.on('keyup change', function (event) {
-                            console.log("On keyup and change function" + event.which);
-
                             if (event.which === 13 && !event.shiftKey && ngModel !== '' && attrs.sendOnEnter) {
                                 if (scope[attrs.sendOnEnter] && (typeof scope[attrs.sendOnEnter] == 'function')) {
                                     scope[attrs.sendOnEnter]();
@@ -103,12 +108,10 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                             }
                         });
                         element.on('blur', function (event) {
-                            console.log("On blur function: ", event.type);
                             scope.$evalAsync(read(event, null));
 
                         });
                         element.on('focus', function (event) {
-                             console.log("On focus function: ", event.type);
                            scope.$evalAsync(read(event, null));
                         })
                         // read(null, null);
