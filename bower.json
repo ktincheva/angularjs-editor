@@ -6,15 +6,14 @@
   "description": "Angularjs content editable with smilies support",
   "main": "contenteditable.js",
   "dependencies": {
-  "angular": ">=1.5.0",
+    "angular": ">=1.5.0",
     "angular-smilies": "~1.3.0"
   },
   "keywords": [
     "contenteditable"
   ],
   "license": "MIT",
-  "homepage": "",
-  "private": true,
+  "homepage": "https://github.com/ktincheva/angularjs-editor",
   "ignore": [
     "**/.*",
     "node_modules",

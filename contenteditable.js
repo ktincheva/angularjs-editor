@@ -28,36 +28,30 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                         var range, selection, start, end, selectedText, startNode, endNode;
 
                         var read = function (event, callback) {
-                            
                             var html = element.html();
                             if (html != '') {
-                                if (attrs.stripBr=="true" && event && event.keyCode == 32) {
-                                    
+                                if (attrs.stripBr == "true" && event && event.keyCode == 32) {
                                     html = html.replace(/<br\s*[\/]?>/gi, "&nbsp;");
                                 }
                                 if (event && event.keyCode == 32) {
                                     // Hach smilies filter skip filterin OO
                                     html = html.replace("ОО", "О^О");
-                                html = $filter('smilies')(html);
+                                    html = $filter('smilies')(html);
                                     html = html.replace("О^О", "ОО");
-                                    
                                 }
                                 updateView(html);
                             }
                         }
                         var updateView = function (html) {
-                            
                             if (ngModel.$viewValue != html)
                             {
                                 ngModel.$setViewValue(html);
-                                element.html(html);
-                                if (element[0].lastChild.nodeName == 'I')
-                                    element.html(element.html() + "&nbsp;");
-                                moveCaretToEndOnChange()
+                                ngModel.$render();
                             }
                         }
                         var moveCaretToEndOnChange = function () {
                             var contentEditableElement = element[0];
+                            //  console.trace("move caret of end of changes");
                             var range, selection;
                             if (document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
                             {
@@ -77,23 +71,14 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                             }
                         }
 
-
-
                         /*
                          * Specify how UI should be updated
                          */
                         ngModel.$render = function () {
-                            var value = null;
-                            if (attrs.focusOnChange && ngModel.$viewValue !== '') {
-                                value = $filter('smilies')(ngModel.$viewValue);
-                                element.html(value);
-                                if (element[0].lastChild.nodeName == 'I')
-                                    element.html(element.html() + "&nbsp;");
-                                moveCaretToEndOnChange()
-                            } else {
-                                if (ngModel.$viewValue != '' && element.html() != ngModel.$viewValue)
-                                    element.html(ngModel.$viewValue);
-
+                            if (element.html() != ngModel.$viewValue)
+                            {
+                                element.html(ngModel.$viewValue);
+                                moveCaretToEndOnChange();
                             }
                         };
 
@@ -109,10 +94,9 @@ angular.module('angularjs-editor', ['ngRoute', 'angular-smilies'])
                         });
                         element.on('blur', function (event) {
                             scope.$evalAsync(read(event, null));
-
                         });
                         element.on('focus', function (event) {
-                           scope.$evalAsync(read(event, null));
+                            scope.$evalAsync(read(event, null));
                         })
                         // read(null, null);
                     }
